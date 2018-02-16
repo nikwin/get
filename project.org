@@ -1,0 +1,32 @@
+* DONE Install Box2D and figure out the basics 0/4T
+* TODO Make the player character.
+  - Make sure to laugh at his stoicism
+  - Can give him text bubbles.
+  - Can make him out of the word stoic
+* TODO Put in the mountain
+  - Make it out of images of words.
+  - Words:
+    - Trash
+    - Obstacle
+    - Chair
+    - Oar
+    - Inhibition
+* TODO Put in the alternate path
+  - How exactly is this supposed to work though?
+  - Make sure that it is always there.
+  - Make a light nearby representing me?
+    - Have me talk about wanting to help, but needing to be met halfway
+    - Imply that the player will figure it out with time.
+    - Tell them that they don't need me to help them.
+  - Just make it a pressing of the keys.
+* TODO Record the voice-over
+    - Why do they need to scale the mountain at all?
+    - Talk about how you don't get over things
+      - Give examples - game, girls
+* TODO Implement the sound.
+* TODO Bonus Level of Getting Into It
+  - Figure out what the argument is.
+  - The intrinsic value of difficulty?
+* TODO Make private itch thing and e-mail Bennett Foddy
+  - support@foddy.net
+* TODO Release.
