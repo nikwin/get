@@ -1,5 +1,5 @@
 var Protag = function(){
-    this.rect = [100, height - 205, 100, 200];
+    this.rect = [100, height - 65, 40, 60];
     this.vel = [0, 0];
     this.image = 'protag';
 };
@@ -51,8 +51,8 @@ var StruggleButton = function(protag){
 
 StruggleButton.prototype.clicked = function(){
     if (Math.random() < 0.25 && !_.any(this.protag.vel, _.identity)){
-        this.protag.vel[1] = -10 - Math.random() * 5;
-        this.protag.vel[0] = (10 + Math.random() * 5) * ((Math.random() > 0.5) ? 1 : -1);
+        this.protag.vel[1] = -12 - Math.random() * 5;
+        this.protag.vel[0] = (6 + Math.random() * 3) * ((Math.random() > 0.5) ? 1 : -1);
     }
 };
 
@@ -69,7 +69,9 @@ var Game = function(){
 Game.prototype.initialize = function(){
     this.protag = new Protag();
     this.ledges = [
-        new Ledge('ground', [0, height - 5, width, 5])
+        new Ledge('ground', [0, height - 5, width, 5]),
+        new Ledge('trash', [0, height - 100, 400, 20]),
+        new Ledge('trash', [100, height - 220, 400, 20])
     ];
     this.buttons = [
         new StruggleButton(this.protag)
