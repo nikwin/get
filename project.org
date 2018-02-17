@@ -35,6 +35,6 @@
 * Tasks
 - [X] Put up the rest of the designed mountain.
 - [X] Put up some amount of ProcGen mountain
-- [ ] Moving camera
+- [X] Moving camera
 - [ ] Put in the system for voice clips.
 - [ ] Art for the PC

@@ -5,8 +5,9 @@ var Protag = function(){
     this.image = 'protag';
 };
 
-Protag.prototype.draw = function(){
-    ctx.drawImage(getImage(this.image), this.rect[0], this.rect[1]);
+Protag.prototype.draw = function(camera){
+    var y = this.rect[1] - camera.y;
+    ctx.drawImage(getImage(this.image), this.rect[0], y);
 };
 
 Protag.prototype.update = function(interval, ledges){
@@ -64,6 +65,14 @@ StruggleButton.prototype.draw = function(){
     ctx.fillText('STRUGGLE', this.rect[0], this.rect[1] + this.rect[3]);
 };
 
+var Camera = function(){
+    this.y = 0;
+};
+
+Camera.prototype.update = function(protag){
+    this.y = min(0, protag.rect[1] + ((protag.rect[3] - height) / 2));
+};
+
 var Game = function(){
 };
 
@@ -96,11 +105,14 @@ Game.prototype.initialize = function(){
         new StruggleButton(this.protag)
     ];
 
+    this.camera = new Camera();
+
     bindHandler.bindFunction(this.getTouchFunction());
 };
 
 Game.prototype.update = function(interval){
     this.protag.update(interval, this.ledges);
+    this.camera.update(this.protag);
     return true;
 };
 
@@ -108,9 +120,9 @@ Game.prototype.draw = function(){
     ctx.fillStyle = '#99aacc';
     ctx.fillRect(0, 0, width, height);
     
-    _.each(this.ledges, ledge => ledge.draw());
+    _.each(this.ledges, ledge => ledge.draw(this.camera));
 
-    this.protag.draw();
+    this.protag.draw(this.camera);
 
     _.each(this.buttons, button => button.draw());
 };
