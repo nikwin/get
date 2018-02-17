@@ -6,12 +6,12 @@
 * TODO Put in the mountain
   - Make it out of images of words.
   - Words:
-    - Trash
-    - Obstacle
-    - Chair
-    - Oar
-    - Inhibition
-    - Failure
+    - [X] Trash
+    - [X] Obstacle
+    - [X] Chair
+    - [X] Oar
+    - [X] Inhibition
+    - [X] Failure
 * TODO Put in the alternate path
   - How exactly is this supposed to work though?
   - Make sure that it is always there.
@@ -31,3 +31,10 @@
 * TODO Make private itch thing and e-mail Bennett Foddy
   - support@foddy.net
 * TODO Release.
+
+* Tasks
+- [X] Put up the rest of the designed mountain.
+- [ ] Put up some amount of ProcGen mountain
+- [ ] Moving camera
+- [ ] Put in the system for voice clips.
+- [ ] Art for the PC

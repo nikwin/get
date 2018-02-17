@@ -1,3 +1,4 @@
+
 var Protag = function(){
     this.rect = [100, height - 65, 40, 60];
     this.vel = [0, 0];
@@ -70,8 +71,12 @@ Game.prototype.initialize = function(){
     this.protag = new Protag();
     this.ledges = [
         new Ledge('ground', [0, height - 5, width, 5]),
-        new Ledge('trash', [0, height - 100, 400, 20]),
-        new Ledge('trash', [100, height - 220, 400, 20])
+        new Ledge('trashtrash', [0, height - 200, 600, 65]),
+        new Ledge('failures', [400, height - 350, 400, 60]),
+        new Ledge('inhibition', [100, height - 500, 444, 60]),
+        new Ledge('oar', [width - 175, height - 700, 175, 60]),
+        new Ledge('trash', [400, height - 850, 1, 277, 60]),
+        new Ledge('pain', [width - 184, height - 1050, 184, 58])
     ];
     this.buttons = [
         new StruggleButton(this.protag)
@@ -88,8 +93,11 @@ Game.prototype.update = function(interval){
 Game.prototype.draw = function(){
     ctx.fillStyle = '#99aacc';
     ctx.fillRect(0, 0, width, height);
-    this.protag.draw();
+    
     _.each(this.ledges, ledge => ledge.draw());
+
+    this.protag.draw();
+
     _.each(this.buttons, button => button.draw());
 };
 
