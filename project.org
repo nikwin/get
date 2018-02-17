@@ -36,5 +36,7 @@
 - [X] Put up the rest of the designed mountain.
 - [X] Put up some amount of ProcGen mountain
 - [X] Moving camera
-- [ ] Put in the system for voice clips.
+- [X] Put in the system for voice clips.
 - [ ] Art for the PC
+- [ ] Some background art
+- [ ] Record all of the voice clips

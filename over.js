@@ -1,8 +1,49 @@
 
+var TalkHandler = function(){
+    this.y = 0;
+    this.playing = false;
+    this.maxHeight = 0;
+    this.climbClips = [];
+    this.climbIndex = 0;
+};
+
+TalkHandler.prototype.updateY = function(y){
+    var yDiff = y - this.y;
+    this.y = y;
+
+    if (this.playing){
+        return;
+    }
+
+    if (y > this.maxHeight){
+        this.maxHeight = y;
+        this.play(this.climbClips[this.climbIndex]);
+        this.climbIndex += 1;
+    }
+    else if (yDiff < -100){
+        var fallClip = _.sample(this.fallClips);
+        if (fallClip){
+            var fallClipIndex = _.indexOf(this.fallClips, fallClip);
+            this.fallClips.splice(fallClipIndex, 1);
+            this.play(fallClip);
+        }
+    }
+};
+
+TalkHandler.prototype.play = function(clip){
+    this.playing = true;
+};
+
+TalkHandler.prototype.update = function(){
+    this.playing = false;
+};
+
+
 var Protag = function(){
     this.rect = [100, height - 65, 40, 60];
     this.vel = [0, 0];
     this.image = 'protag';
+    this.talkHandler = new TalkHandler();
 };
 
 Protag.prototype.draw = function(camera){
@@ -31,11 +72,14 @@ Protag.prototype.update = function(interval, ledges){
         if (collideRect(this.rect, ledge.rect) && this.vel[1] > 0 && this.rect[1] + this.rect[3] - this.vel[1] < ledge.rect[1]){
             this.vel[1] *= -0.25;
             if (this.vel[1] > -0.5){
+                this.talkHandler.updateY(this.rect[1]);
                 this.vel = [0, 0];
             }
             this.rect[1] = ledge.rect[1] - this.rect[3] - 1;
         }
     });
+
+    this.talkHandler.update();
 };
 
 var Ledge = function(image, rect){
