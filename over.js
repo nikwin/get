@@ -78,6 +78,20 @@ Game.prototype.initialize = function(){
         new Ledge('trash', [400, height - 850, 1, 277, 60]),
         new Ledge('pain', [width - 184, height - 1050, 184, 58])
     ];
+
+    var extraLedges = [];
+
+    var y = height - 1050;
+    for (var i = 0; i < 50; i++){
+        var baseLedge = _.sample(this.ledges);
+        y -= Math.random() * 150 + 50;
+        var ledge = new Ledge(baseLedge.image, 
+                              [Math.random() * (width - baseLedge.rect[2]), y, baseLedge.rect[2], baseLedge.rect[3]]);
+        extraLedges.push(ledge);
+    }
+    
+    this.ledges = this.ledges.concat(extraLedges);
+
     this.buttons = [
         new StruggleButton(this.protag)
     ];
