@@ -1,10 +1,41 @@
-
 var TalkHandler = function(){
     this.y = 0;
     this.playing = false;
     this.maxHeight = 0;
     this.climbClips = [];
     this.climbIndex = 0;
+
+    var clipData = [
+        ['fall1', false],
+        ['pt2', true],
+        ['pt3', true],
+        ['fall3', false],
+        ['pt4', true],
+        ['fall4', false],
+        ['pt5', true],
+        ['fall5', false],
+        ['pt7', true]
+    ];
+
+    this.clipIndex = 0;
+
+    var loadSound = function(soundName){
+        var sound = new Audio('sounds/' + soundName + '.ogg');
+        sound.load();
+        return sound;
+    };
+
+    this.clips = _.map(clipData, data => { 
+        return {
+            sound: loadSound(data[0]), 
+            climb: data[1]
+        };
+    });
+
+    var endClip = loadSound('end');
+    
+    this.currentSound = loadSound('intro_long');
+    this.currentSound.play();
 };
 
 TalkHandler.prototype.updateY = function(y){
@@ -15,7 +46,7 @@ TalkHandler.prototype.updateY = function(y){
         return;
     }
 
-    if (y > this.maxHeight){
+    if (yDiff > 100){
         this.maxHeight = y;
         this.play(this.climbClips[this.climbIndex]);
         this.climbIndex += 1;
@@ -30,14 +61,22 @@ TalkHandler.prototype.updateY = function(y){
     }
 };
 
-TalkHandler.prototype.play = function(clip){
-    this.playing = true;
+TalkHandler.prototype.playNext = function(climb){
+    if (this.currentSound.ended){
+        if (this.clips[this.clipIndex].climb == climb){
+            this.clips[this.clipIndex].sound.play();
+            this.clipIndex += 1;
+        }
+    }
 };
 
-TalkHandler.prototype.update = function(){
-    this.playing = false;
+TalkHandler.prototype.playEnd = function(){
+    this.currentSound.pause();
+    
+    if (this.clipIndex == this.clips.length){
+        this.endClip.play();
+    }
 };
-
 
 var Protag = function(){
     this.rect = [100, height - 65, 40, 60];
@@ -78,8 +117,6 @@ Protag.prototype.update = function(interval, ledges){
             this.rect[1] = ledge.rect[1] - this.rect[3] - 1;
         }
     });
-
-    this.talkHandler.update();
 };
 
 var Ledge = function(image, rect){
