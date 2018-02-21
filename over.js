@@ -83,6 +83,11 @@ var Protag = function(){
     this.vel = [0, 0];
     this.image = 'protag';
     this.talkHandler = new TalkHandler();
+
+    document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+    this.lastCodes = [];
+
+    this.flying = false;
 };
 
 Protag.prototype.draw = function(camera){
@@ -91,7 +96,10 @@ Protag.prototype.draw = function(camera){
 };
 
 Protag.prototype.update = function(interval, ledges){
-    if (this.vel[1]){
+    if (this.flying){
+        this.vel[1] = -10;
+    }
+    else if (this.vel[1]){
         this.vel[1] += 0.3;
     }
 
@@ -117,6 +125,17 @@ Protag.prototype.update = function(interval, ledges){
             this.rect[1] = ledge.rect[1] - this.rect[3] - 1;
         }
     });
+};
+
+Protag.prototype.handleKeyPress = function(e){
+    this.lastCodes.push(e.keyCode);
+    this.lastCodes = _.last(this.lastCodes, 4);
+    var helpCode = [72, 69, 76, 80];
+
+    if (_.isEqual(this.lastCodes, helpCode)){
+        this.flying = true;
+        this.talkHandler.playEnd();
+    }
 };
 
 var Ledge = function(image, rect){
@@ -160,7 +179,10 @@ var Game = function(){
 Game.prototype.initialize = function(){
     this.protag = new Protag();
     this.ledges = [
-        new Ledge('ground', [0, height - 5, width, 5]),
+        new Ledge('ground', [0, height - 5, width, 5])
+    ];
+
+    var ledges = [
         new Ledge('trashtrash', [0, height - 200, 600, 65]),
         new Ledge('failures', [400, height - 350, 400, 60]),
         new Ledge('inhibition', [100, height - 500, 444, 60]),
@@ -169,11 +191,13 @@ Game.prototype.initialize = function(){
         new Ledge('pain', [width - 184, height - 1050, 184, 58])
     ];
 
+    this.ledges = this.ledges.concat(ledges);
+
     var extraLedges = [];
 
     var y = height - 1050;
     for (var i = 0; i < 50; i++){
-        var baseLedge = _.sample(this.ledges);
+        var baseLedge = _.sample(ledges);
         y -= Math.random() * 150 + 50;
         var ledge = new Ledge(baseLedge.image, 
                               [Math.random() * (width - baseLedge.rect[2]), y, baseLedge.rect[2], baseLedge.rect[3]]);
