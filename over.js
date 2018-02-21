@@ -84,11 +84,16 @@ var Protag = function(){
     this.lastCodes = [];
 
     this.flying = false;
+    this.effect = undefined;
 };
 
 Protag.prototype.draw = function(camera){
     var y = this.rect[1] - camera.y;
     ctx.drawImage(getImage(this.image), this.rect[0], y);
+
+    if (this.effect){
+        this.effect.draw(camera);
+    }
 };
 
 Protag.prototype.update = function(interval, ledges){
@@ -121,6 +126,13 @@ Protag.prototype.update = function(interval, ledges){
             this.rect[1] = ledge.rect[1] - this.rect[3] - 1;
         }
     });
+
+    if (this.effect){
+        this.effect.update(interval);
+        if (this.effect.opacity < 0.5){
+            this.effect = undefined;
+        }
+    }
 };
 
 Protag.prototype.handleKeyPress = function(e){
@@ -134,6 +146,32 @@ Protag.prototype.handleKeyPress = function(e){
     }
 };
 
+Protag.prototype.jump = function(){
+    this.vel[1] = -12 - Math.random() * 5;
+    this.vel[0] = (6 + Math.random() * 3) * ((Math.random() > 0.5) ? 1 : -1);
+    this.effect = new JumpEffect([this.rect[0], this.rect[1]]);
+};
+
+var JumpEffect = function(pos){
+    this.pos = pos;
+    this.opacity = 0.75;
+};
+
+JumpEffect.prototype.update = function(interval){
+    this.opacity -= 0.5 * interval;
+    this.pos[1] -= 25 * interval;
+};
+
+JumpEffect.prototype.draw = function(camera){
+    console.log(this.opacity);
+    ctx.globalAlpha = this.opacity;
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('MUSCLES', this.pos[0] - 10, this.pos[1] - camera.y);
+    
+    ctx.globalAlpha = 1;
+};
+
 var Ledge = function(image, rect){
     this.image = image;
     this.rect = rect;
@@ -145,20 +183,26 @@ var StruggleButton = function(protag){
     this.protag = protag;
     this.rect = [width - 120, 20, 100, 40];
     this.name = 'Struggle';
+    this.flashTime = 0;
 };
 
 StruggleButton.prototype.clicked = function(){
     if (Math.random() < 0.25 && !_.any(this.protag.vel, _.identity)){
-        this.protag.vel[1] = -12 - Math.random() * 5;
-        this.protag.vel[0] = (6 + Math.random() * 3) * ((Math.random() > 0.5) ? 1 : -1);
+        this.protag.jump();
+        this.flashTime = 0.25;
     }
 };
 
 StruggleButton.prototype.draw = function(){
-    ctx.strokeStyle = '#000000';
+    var color = (this.flashTime > 0) ? '#ffffff' : '#000000';
+    ctx.strokeStyle = color;
     ctxRoundedRect(this.rect);
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = color;
     ctx.fillText('STRUGGLE', this.rect[0] + 20, this.rect[1] + this.rect[3] - 15);
+};
+
+StruggleButton.prototype.update = function(interval){
+    this.flashTime = max(this.flashTime - interval, 0);
 };
 
 var Camera = function(){
@@ -182,7 +226,7 @@ Game.prototype.initialize = function(){
         new Ledge('trashtrash', [0, height - 200, 600, 65]),
         new Ledge('failures', [400, height - 350, 400, 60]),
         new Ledge('inhibition', [100, height - 500, 444, 60]),
-        new Ledge('oar', [width - 175, height - 700, 175, 60]),
+        new Ledge('oar', [width - 175, height - 650, 175, 60]),
         new Ledge('trash', [400, height - 850, 1, 277, 60]),
         new Ledge('pain', [width - 184, height - 1050, 184, 58])
     ];
@@ -192,7 +236,7 @@ Game.prototype.initialize = function(){
     var extraLedges = [];
 
     var y = height - 1050;
-    for (var i = 0; i < 50; i++){
+    for (var i = 0; i < 250; i++){
         var baseLedge = _.sample(ledges);
         y -= Math.random() * 150 + 50;
         var ledge = new Ledge(baseLedge.image, 
@@ -214,6 +258,7 @@ Game.prototype.initialize = function(){
 Game.prototype.update = function(interval){
     this.protag.update(interval, this.ledges);
     this.camera.update(this.protag);
+    _.each(this.buttons, button => button.update(interval));
     return true;
 };
 

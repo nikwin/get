@@ -42,6 +42,8 @@
 - [ ] Record all of the voice clips
 
 
-* TODO Polish [0/2]
-** TODO Have the button flash when you succeed at struggling.
-** TODO Have an effect when you jump
+* TODO Polish [3/4]
+** DONE Have the button flash when you succeed at struggling.
+** DONE Have an effect when you jump
+** DONE Make the mountain much larger
+** TODO Make an opening and ending screen.
