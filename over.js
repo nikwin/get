@@ -32,7 +32,7 @@ var TalkHandler = function(){
         };
     });
 
-    var endClip = loadSound('end');
+    this.endClip = loadSound('end');
     
     this.currentSound = loadSound('intro_long');
     this.currentSound.play();
@@ -46,26 +46,22 @@ TalkHandler.prototype.updateY = function(y){
         return;
     }
 
-    if (yDiff > 100){
-        this.maxHeight = y;
-        this.play(this.climbClips[this.climbIndex]);
-        this.climbIndex += 1;
+    if (yDiff < -100){
+        this.playNext(true);
     }
-    else if (yDiff < -100){
-        var fallClip = _.sample(this.fallClips);
-        if (fallClip){
-            var fallClipIndex = _.indexOf(this.fallClips, fallClip);
-            this.fallClips.splice(fallClipIndex, 1);
-            this.play(fallClip);
-        }
+    else if (yDiff > 100){
+        this.playNext(false);
     }
 };
 
 TalkHandler.prototype.playNext = function(climb){
     if (this.currentSound.ended){
-        if (this.clips[this.clipIndex].climb == climb){
-            this.clips[this.clipIndex].sound.play();
+        var clip = this.clips[this.clipIndex];
+        if (clip.climb == climb){
+            clip.sound.play();
+            this.currentSound = clip.sound;
             this.clipIndex += 1;
+            
         }
     }
 };
@@ -162,7 +158,7 @@ StruggleButton.prototype.draw = function(){
     ctx.strokeStyle = '#000000';
     ctxRoundedRect(this.rect);
     ctx.fillStyle = '#000000';
-    ctx.fillText('STRUGGLE', this.rect[0], this.rect[1] + this.rect[3]);
+    ctx.fillText('STRUGGLE', this.rect[0] + 20, this.rect[1] + this.rect[3] - 15);
 };
 
 var Camera = function(){
