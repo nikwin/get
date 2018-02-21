@@ -99,6 +99,7 @@ Protag.prototype.draw = function(camera){
 Protag.prototype.update = function(interval, ledges){
     if (this.flying){
         this.vel[1] = -10;
+        this.vel[0] = 0;
     }
     else if (this.vel[1]){
         this.vel[1] += 0.3;
@@ -163,7 +164,6 @@ JumpEffect.prototype.update = function(interval){
 };
 
 JumpEffect.prototype.draw = function(camera){
-    console.log(this.opacity);
     ctx.globalAlpha = this.opacity;
     
     ctx.fillStyle = '#ffffff';
@@ -236,7 +236,7 @@ Game.prototype.initialize = function(){
     var extraLedges = [];
 
     var y = height - 1050;
-    for (var i = 0; i < 250; i++){
+    for (var i = 0; i < 125; i++){
         var baseLedge = _.sample(ledges);
         y -= Math.random() * 150 + 50;
         var ledge = new Ledge(baseLedge.image, 
@@ -276,6 +276,7 @@ Game.prototype.draw = function(){
 Game.prototype.getTouchFunction = function(){
     return (e) => {
         e.preventDefault();
+        window.focus();
 
         var pos = getPos(e);
         
