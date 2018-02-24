@@ -147,9 +147,9 @@ Protag.prototype.handleKeyPress = function(e){
     }
 };
 
-Protag.prototype.jump = function(){
+Protag.prototype.jump = function(x){
     this.vel[1] = -12 - Math.random() * 5;
-    this.vel[0] = (6 + Math.random() * 3) * ((Math.random() > 0.5) ? 1 : -1);
+    this.vel[0] = x * 12;
     this.effect = new JumpEffect([this.rect[0], this.rect[1]]);
 };
 
@@ -167,7 +167,7 @@ JumpEffect.prototype.draw = function(camera){
     ctx.globalAlpha = this.opacity;
     
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('MUSCLES', this.pos[0] - 10, this.pos[1] - camera.y);
+    ctx.fillText('MUSCLES', this.pos[0] - 2, this.pos[1] - camera.y);
     
     ctx.globalAlpha = 1;
 };
@@ -184,11 +184,14 @@ var StruggleButton = function(protag){
     this.rect = [width - 120, 20, 100, 40];
     this.name = 'Struggle';
     this.flashTime = 0;
+    this.arrowX = this.rect[2] / 2;
+    this.arrowChangeTime = 0.1;
 };
 
 StruggleButton.prototype.clicked = function(){
     if (Math.random() < 0.25 && !_.any(this.protag.vel, _.identity)){
-        this.protag.jump();
+        var arrow = (this.arrowX - this.rect[2] / 2) / this.rect[2];
+        this.protag.jump(arrow);
         this.flashTime = 0.25;
     }
 };
@@ -199,10 +202,25 @@ StruggleButton.prototype.draw = function(){
     ctxRoundedRect(this.rect);
     ctx.fillStyle = color;
     ctx.fillText('STRUGGLE', this.rect[0] + 20, this.rect[1] + this.rect[3] - 15);
+    ctx.drawImage(getImage('arrow'), this.rect[0] + this.arrowX - 5, this.rect[1] + this.rect[3]);
 };
 
 StruggleButton.prototype.update = function(interval){
     this.flashTime = max(this.flashTime - interval, 0);
+
+    if (this.flashTime === 0){
+        this.arrowChangeTime -= interval;
+        if (this.arrowChangeTime < 0){
+            this.arrowChangeTime += 0.2;
+            this.arrowX += (Math.random() - 0.5) * 40;
+            if (this.arrowX < 0){
+                this.arrowX *= -1;
+            }
+            else if (this.arrowX > this.rect[2]){
+                this.arrowX -= 2 * (this.arrowX - this.rect[2]);
+            }
+        }
+    }
 };
 
 var Camera = function(){
