@@ -28,7 +28,7 @@
 * TODO Bonus Level of Getting Into It
   - Figure out what the argument is.
   - The intrinsic value of difficulty?
-* TODO Make private itch thing and e-mail Bennett Foddy
+* DONE Make private itch thing and e-mail Bennett Foddy
   - support@foddy.net
 * TODO Release.
 
