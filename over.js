@@ -148,8 +148,8 @@ Protag.prototype.handleKeyPress = function(e){
 };
 
 Protag.prototype.jump = function(x){
-    this.vel[1] = -12 - Math.random() * 5;
-    this.vel[0] = x * 12;
+    this.vel[1] = -10 - Math.random() * 5;
+    this.vel[0] = x * 15;
     this.effect = new JumpEffect([this.rect[0], this.rect[1]]);
 };
 
